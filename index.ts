@@ -80,16 +80,16 @@ export const setFCAddresses = async () => {
   let whiteListUserLength = whiteListAddress.length;
 
   const myContract = new ethers.Contract(process.env.CONTRACT_ADDRESS || "Contract_Address", BobbyOrrDrop.abi, signer);
-  console.log("setFCAddresses", whiteListUserLength);
 
   for (let i = 0; i * 100 < whiteListUserLength; i += 100) {
     let array = [];
     for (let j = i * 100; j < Math.min(whiteListUserLength, (i + 1) * 100); j++) {
       array.push(whiteListAddress[j].address);
     }
+    console.log("setFCAddresses", array);
 
     await myContract.setFanClubAddresses(array, {
-      gasLimit: 10000000,
+      gasLimit: 100000000,
     });
   }
 
@@ -100,7 +100,6 @@ export const setFCFSAddresses = async () => {
   let whiteListUsers = await prisma.bobbyOrrWhiteList.findMany({});
 
   const myContract = new ethers.Contract(process.env.CONTRACT_ADDRESS || "Contract_Address", BobbyOrrDrop.abi, signer);
-  console.log("setFCFSAddresses", whiteListUsers.length);
 
   let whiteListUserLength = whiteListUsers.length;
 
@@ -109,9 +108,10 @@ export const setFCFSAddresses = async () => {
     for (let j = i * 100; j < Math.min(whiteListUserLength, (i + 1) * 100); j++) {
       array.push(whiteListUsers[j].address);
     }
+    console.log("setFCFSAddresses", array);
 
     await myContract.setWhiteListAddresses(array, {
-      gasLimit: 10000000,
+      gasLimit: 100000000,
     });
   }
   // await myContract.setWhiteListAddresses(whiteListUsers.map((item) => item.id));
