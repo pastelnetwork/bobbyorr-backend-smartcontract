@@ -132,9 +132,6 @@ export const setFCFSAddresses = async () => {
 export const setup = async () => {
   try {
     await setFCSM();
-    await setFCFSSM();
-    await setFCAddresses();
-    await setFCFSAddresses();
   } catch (error) {
     console.log(error);
   }
