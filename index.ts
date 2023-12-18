@@ -33,7 +33,7 @@ export const setFCSM = async () => {
   const whiteListUserLength = whiteListUsers.length;
 
   const myContract = new ethers.Contract(process.env.CONTRACT_ADDRESS || "Contract_Address", BobbyOrrDrop.abi, signer);
-  console.log("setFCSM", whiteListUserLength);
+  console.log("setFCSM", whiteListUserLength, whiteListUsers);
 
   // for (let i = 0; i * 100 < whiteListUserLength; i += 100) {
   //   let array = [];
@@ -41,12 +41,12 @@ export const setFCSM = async () => {
   //     array.push(whiteListUsers[j].id);
   //   }
 
-  await myContract.setFanClubSmartmintUsers(
-    whiteListUsers.map((user: any) => user.id),
-    {
-      gasLimit: 10000000,
-    }
-  );
+  // await myContract.setFanClubSmartmintUsers(
+  //   whiteListUsers.map((user: any) => user.id),
+  //   {
+  //     gasLimit: 10000000,
+  //   }
+  // );
   // }
 };
 
@@ -92,14 +92,14 @@ export const setFCAddresses = async () => {
   //   for (let j = i * 100; j < Math.min(whiteListUserLength, (i + 1) * 100); j++) {
   //     array.push(whiteListAddress[j].address);
   //   }
-  //   console.log("setFCAddresses", array);
+  console.log("setFCAddresses", whiteListAddress);
 
-  await myContract.setFanClubAddresses(
-    whiteListAddress.map((user: any) => user.address),
-    {
-      gasLimit: 20000000,
-    }
-  );
+  // await myContract.setFanClubAddresses(
+  //   whiteListAddress.map((user: any) => user.address),
+  //   {
+  //     gasLimit: 20000000,
+  //   }
+  // );
   // }
 
   // await myContract.setFanClubAddresses(whiteListAddress.map((item) => item.id));
