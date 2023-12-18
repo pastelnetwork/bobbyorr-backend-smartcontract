@@ -40,7 +40,9 @@ export const setFCSM = async () => {
       array.push(whiteListUsers[j].id);
     }
 
-    await myContract.setFanClubSmartmintUsers(array);
+    await myContract.setFanClubSmartmintUsers(array, {
+      gasLimit: 10000000,
+    });
   }
 };
 
@@ -61,7 +63,9 @@ export const setFCFSSM = async () => {
       array.push(whiteListUsers[j].id);
     }
 
-    await myContract.setWhiteListSmartmintUsers(array);
+    await myContract.setWhiteListSmartmintUsers(array, {
+      gasLimit: 10000000,
+    });
   }
 };
 
@@ -81,7 +85,9 @@ export const setFCAddresses = async () => {
       array.push(whiteListAddress[j].address);
     }
 
-    await myContract.setWhiteListSmartmintUsers(array);
+    await myContract.setWhiteListSmartmintUsers(array, {
+      gasLimit: 10000000,
+    });
   }
 
   // await myContract.setFanClubAddresses(whiteListAddress.map((item) => item.id));
@@ -100,7 +106,9 @@ export const setFCFSAddresses = async () => {
       array.push(whiteListUsers[j].address);
     }
 
-    await myContract.setWhiteListSmartmintUsers(array);
+    await myContract.setWhiteListSmartmintUsers(array, {
+      gasLimit: 10000000,
+    });
   }
   // await myContract.setWhiteListAddresses(whiteListUsers.map((item) => item.id));
 };
