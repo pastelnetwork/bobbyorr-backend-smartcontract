@@ -78,7 +78,7 @@ export const setFCAddresses = async () => {
   for (let i = 0; i * 100 < whiteListUserLength; i += 100) {
     let array = [];
     for (let j = i * 100; j < Math.min(whiteListUserLength, (i + 1) * 100); j++) {
-      array.push(whiteListAddress[j].id);
+      array.push(whiteListAddress[j].address);
     }
 
     await myContract.setWhiteListSmartmintUsers(array);
@@ -97,7 +97,7 @@ export const setFCFSAddresses = async () => {
   for (let i = 0; i * 100 < whiteListUserLength; i += 100) {
     let array = [];
     for (let j = i * 100; j < Math.min(whiteListUserLength, (i + 1) * 100); j++) {
-      array.push(whiteListUsers[j].id);
+      array.push(whiteListUsers[j].address);
     }
 
     await myContract.setWhiteListSmartmintUsers(array);
