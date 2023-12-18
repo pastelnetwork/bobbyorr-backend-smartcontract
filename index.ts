@@ -94,7 +94,7 @@ export const setFCAddresses = async () => {
     JSON.stringify(whiteListAddress.map((user, index) => ({ index, address: user.address })))
   );
 
-  for (let i = 0; i * 100 < whiteListUserLength; i += 1) {
+  for (let i = 1; i * 100 < whiteListUserLength; i += 1) {
     let array = [];
     for (let j = i * 100; j < Math.min(whiteListUserLength, (i + 1) * 100); j++) {
       array.push(whiteListAddress[j].address);
