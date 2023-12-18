@@ -94,17 +94,17 @@ export const setFCAddresses = async () => {
     JSON.stringify(whiteListAddress.map((user, index) => ({ index, address: user.address })))
   );
 
-  for (let i = 0; i * 100 < whiteListUserLength; i += 100) {
+  for (let i = 0; i * 100 < whiteListUserLength; i += 1) {
     let array = [];
     for (let j = i * 100; j < Math.min(whiteListUserLength, (i + 1) * 100); j++) {
       array.push(whiteListAddress[j].address);
     }
-    console.log("setFCAddresses", whiteListAddress);
+    console.log("setFCAddresses", array);
 
-    const tx = await myContract.setFanClubAddresses(array);
+    // const tx = await myContract.setFanClubAddresses(array);
 
-    const response = await tx.wait();
-    console.log("response", response);
+    // const response = await tx.wait();
+    // console.log("response", response);
   }
 
   // await myContract.setFanClubAddresses(whiteListAddress.map((item) => item.id));
