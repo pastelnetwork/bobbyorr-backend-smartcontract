@@ -39,23 +39,18 @@ export const setFCSM = async () => {
     whiteListUsers.map((user) => user.id)
   );
 
-  const promises = [];
   for (let i = 0; i * 100 < whiteListUserLength; i += 100) {
-    promises.push(async () => {
-      let array = [];
-      for (let j = i * 100; j < Math.min(whiteListUserLength, (i + 1) * 100); j++) {
-        array.push(whiteListUsers[j].id);
-      }
+    let array = [];
+    for (let j = i * 100; j < Math.min(whiteListUserLength, (i + 1) * 100); j++) {
+      array.push(whiteListUsers[j].id);
+    }
 
-      const tx = await myContract.setFanClubSmartmintUsers(array, {
-        gasLimit: 10000000,
-      });
-
-      await tx.wait();
+    const tx = await myContract.setFanClubSmartmintUsers(array, {
+      gasLimit: 10000000,
     });
-  }
 
-  return Promise.all(promises.map((p) => p()));
+    await tx.wait();
+  }
 };
 
 // export const setFCFSSM = async () => {
