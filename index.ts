@@ -101,10 +101,10 @@ export const setFCAddresses = async () => {
     }
     console.log("setFCAddresses", array);
 
-    // const tx = await myContract.setFanClubAddresses(array);
+    const tx = await myContract.setFanClubAddresses(array);
 
-    // const response = await tx.wait();
-    // console.log("response", response);
+    const response = await tx.wait();
+    console.log("response", response);
   }
 
   // await myContract.setFanClubAddresses(whiteListAddress.map((item) => item.id));
