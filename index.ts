@@ -89,7 +89,7 @@ export const setFCAddresses = async () => {
     console.log("setFCAddresses", array);
 
     await myContract.setFanClubAddresses(array, {
-      gasLimit: 100000000,
+      gasLimit: 50000000,
     });
   }
 
@@ -111,7 +111,7 @@ export const setFCFSAddresses = async () => {
     console.log("setFCFSAddresses", array);
 
     await myContract.setWhiteListAddresses(array, {
-      gasLimit: 100000000,
+      gasLimit: 50000000,
     });
   }
   // await myContract.setWhiteListAddresses(whiteListUsers.map((item) => item.id));
