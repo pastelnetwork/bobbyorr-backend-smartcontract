@@ -49,7 +49,8 @@ export const setFCSM = async () => {
       gasLimit: 10000000,
     });
 
-    await tx.wait();
+    const response = await tx.wait();
+    console.log("response", response);
   }
 };
 
