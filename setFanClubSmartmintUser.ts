@@ -1,3 +1,3 @@
-import { setFCFSSM } from ".";
+import { setFCSM } from ".";
 
-setFCFSSM();
+setFCSM();
