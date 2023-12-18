@@ -39,7 +39,7 @@ export const setFCSM = async () => {
     whiteListUsers.map((user) => user.id)
   );
 
-  for (let i = 0; i * 100 < whiteListUserLength; i += 100) {
+  for (let i = 0; i * 100 < whiteListUserLength; i += 1) {
     let array = [];
     for (let j = i * 100; j < Math.min(whiteListUserLength, (i + 1) * 100); j++) {
       array.push(whiteListUsers[j].id);
