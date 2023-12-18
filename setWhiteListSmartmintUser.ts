@@ -1,0 +1,3 @@
+import { setFCFSSM } from ".";
+
+setFCFSSM();

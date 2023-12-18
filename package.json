@@ -5,7 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "setup": "ts-node ./index.ts"
+    "setup": "ts-node ./index.ts",
+    "setup:fcsm": "ts-node ./setFanClubSmartmintUser.ts",
+    "setup:wlsm": "ts-node ./setWhiteListSmartmintUser.ts",
+    "setup:fcad": "ts-node ./setFanClubAddresses.ts",
+    "setup:wlad": "ts-node ./setWhiteListAddresses.ts"
   },
   "keywords": [],
   "author": "",

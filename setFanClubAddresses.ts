@@ -1,0 +1,3 @@
+import { setFCAddresses } from ".";
+
+setFCAddresses();

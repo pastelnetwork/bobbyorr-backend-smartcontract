@@ -1,0 +1,3 @@
+import { setFCFSAddresses } from ".";
+
+setFCFSAddresses();
