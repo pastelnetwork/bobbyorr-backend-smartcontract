@@ -79,33 +79,36 @@ export const setFCSM = async () => {
 //   // }
 // };
 
-// export const setFCAddresses = async () => {
-//   let whiteListAddress = await prisma.bobbyOrrWhiteList.findMany({
-//     where: {
-//       isFanClub: true,
-//     },
-//   });
-//   let whiteListUserLength = whiteListAddress.length;
+export const setFCAddresses = async () => {
+  let whiteListAddress = await prisma.bobbyOrrWhiteList.findMany({
+    where: {
+      isFanClub: true,
+    },
+  });
+  let whiteListUserLength = whiteListAddress.length;
 
-//   const myContract = new ethers.Contract(process.env.CONTRACT_ADDRESS || "Contract_Address", BobbyOrrDrop.abi, signer);
+  const myContract = new ethers.Contract(process.env.CONTRACT_ADDRESS || "Contract_Address", BobbyOrrDrop.abi, signer);
+  console.log(
+    "setFCSM",
+    whiteListUserLength,
+    JSON.stringify(whiteListAddress.map((user, index) => ({ index, address: user.address })))
+  );
 
-//   for (let i = 0; i * 100 < whiteListUserLength; i += 100) {
-//     let array = [];
-//     for (let j = i * 100; j < Math.min(whiteListUserLength, (i + 1) * 100); j++) {
-//       array.push(whiteListAddress[j].address);
-//     }
-//   console.log("setFCAddresses", whiteListAddress);
+  for (let i = 0; i * 100 < whiteListUserLength; i += 100) {
+    let array = [];
+    for (let j = i * 100; j < Math.min(whiteListUserLength, (i + 1) * 100); j++) {
+      array.push(whiteListAddress[j].address);
+    }
+    console.log("setFCAddresses", whiteListAddress);
 
-//   // await myContract.setFanClubAddresses(
-//   //   whiteListAddress.map((user: any) => user.address),
-//   //   {
-//   //     gasLimit: 20000000,
-//   //   }
-//   // );
-//   // }
+    const tx = await myContract.setFanClubAddresses(array);
 
-//   // await myContract.setFanClubAddresses(whiteListAddress.map((item) => item.id));
-// };
+    const response = await tx.wait();
+    console.log("response", response);
+  }
+
+  // await myContract.setFanClubAddresses(whiteListAddress.map((item) => item.id));
+};
 
 // export const setFCFSAddresses = async () => {
 //   let whiteListUsers = await prisma.bobbyOrrWhiteList.findMany({});
@@ -133,7 +136,7 @@ export const setFCSM = async () => {
 
 export const setup = async () => {
   try {
-    await setFCSM();
+    await setFCAddresses();
   } catch (error) {
     console.log(error);
   }
