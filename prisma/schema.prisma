@@ -1,0 +1,160 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-1.0.x"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             Int            @id @default(autoincrement())
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  deletedAt      DateTime?
+  name           String         @default("") @db.VarChar(255)
+  slug           String         @default("") @db.VarChar(255)
+  email          String         @unique @db.VarChar(255)
+  permission     UserPermission @default(user)
+  picture        String         @default("") @db.VarChar(255)
+  bio            String         @db.Text
+  website        String         @default("") @db.VarChar(255)
+  facebook_url   String         @default("") @db.VarChar(255)
+  linkedin_url   String         @default("") @db.VarChar(255)
+  twitter_url    String         @default("") @db.VarChar(255)
+  wallet_address String         @default("") @db.VarChar(255)
+  instagram_url  String         @default("") @db.VarChar(255)
+  youtube_url    String         @default("") @db.VarChar(255)
+  banner         String         @default("") @db.VarChar(255)
+  referral       String         @default("") @db.VarChar(255)
+  plan           Plan           @default(free)
+  active         Boolean        @default(true)
+  lastLoggedInAt DateTime       @default(now())
+  allowed        Boolean        @default(false)
+  minted         Boolean        @default(false)
+  isBobby        Boolean        @default(false)
+  isFanClub      Boolean        @default(false)
+  referredById   Int?
+  referredBy     User?          @relation("referral", fields: [referredById], references: [id])
+  collections    Collection[]
+  creations      Creation[]
+  NFT            NFT[]
+  referredUser   User[]         @relation("referral")
+}
+
+model Collection {
+  id                 Int             @id @default(autoincrement())
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+  name               String          @default("") @db.VarChar(255)
+  symbol             String          @default("") @db.VarChar(255)
+  url                String          @default("") @db.VarChar(255)
+  description        String          @db.Text
+  royalty_address    String          @default("") @db.VarChar(255)
+  royalty_percentage Int             @default(0)
+  network            String          @default("") @db.VarChar(255)
+  image              String          @default("") @db.VarChar(255)
+  banner             String          @default("") @db.VarChar(255)
+  bannerCrop         String          @default("") @db.VarChar(255)
+  bannerPosition     String          @default("") @db.VarChar(255)
+  nft_names          String          @default("") @db.VarChar(255)
+  type               CollectionType?
+  userId             Int
+  contract_address   String          @default("") @db.VarChar(255)
+  supply             Int             @default(0)
+  current_supply     Int             @default(0)
+  price              Float           @default(0)
+  royalty_secret     String          @default("") @db.VarChar(255)
+  visibility         Boolean         @default(true)
+  user               User            @relation(fields: [userId], references: [id])
+  creations          Creation[]
+  NFT                NFT[]
+  version            Int             @default(1)
+
+  @@index([userId], map: "Collection_userId_fkey")
+}
+
+model Creation {
+  id                 Int        @id @default(autoincrement())
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
+  userId             Int
+  tokenId            Int
+  collectionId       Int
+  attributes         String     @db.Text
+  description        String     @db.Text
+  image              String     @default("") @db.VarChar(255)
+  name               String     @default("") @db.VarChar(255)
+  symbol             String     @default("") @db.VarChar(255)
+  originImage        String     @default("") @db.VarChar(255)
+  cascadeId          String     @default("") @db.VarChar(255)
+  senseId            String     @default("") @db.VarChar(255)
+  cascadeTxId        String     @default("") @db.VarChar(255)
+  senseTxId          String     @default("") @db.VarChar(255)
+  collection         Collection @relation(fields: [collectionId], references: [id])
+  user               User       @relation(fields: [userId], references: [id])
+  tokenAddress       String     @default("") @db.VarChar(255)
+  isVideo            Boolean    @default(false)
+  type               String     @default("image")
+  isCascadeTxUpdated Boolean    @default(false)
+  isSenseTxUpdated   Boolean    @default(false)
+
+  @@index([collectionId], map: "Creation_collectionId_fkey")
+  @@index([userId], map: "Creation_userId_fkey")
+}
+
+model NFT {
+  id             Int        @id @default(autoincrement())
+  name           String     @default("") @db.VarChar(255)
+  description    String     @db.Text
+  externalUrl    String     @default("") @db.VarChar(255)
+  image          String     @default("") @db.VarChar(255)
+  cascadeId      String     @default("") @db.VarChar(255)
+  senseId        String     @default("") @db.VarChar(255)
+  attributes     String     @db.Text
+  collectionId   Int
+  unlockable     Boolean    @default(true)
+  status         Int        @default(0)
+  userId         Int        @default(1)
+  tokenId        Int        @default(0)
+  copies         Int        @default(1)
+  collection     Collection @relation(fields: [collectionId], references: [id])
+  user           User       @relation(fields: [userId], references: [id])
+  originImageUrl String     @default("") @db.VarChar(255)
+
+  @@index([collectionId], map: "NFT_collectionId_fkey")
+  @@index([userId], map: "NFT_userId_fkey")
+}
+
+model BobbyOrrWhiteList {
+  id              Int           @id @default(autoincrement())
+  address         String        @default("") @db.VarChar(43)
+  isFanClub       Boolean       @default(false)
+  createdAt       DateTime      @default(now())
+}
+
+model Subscription {
+  id        Int      @id @default(autoincrement())
+  email     String   @default("") @db.VarChar(255)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum UserPermission {
+  admin
+  user
+}
+
+enum CollectionType {
+  Collection
+  Drop
+}
+
+enum Plan {
+  free
+  premium
+}

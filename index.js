@@ -12,82 +12,84 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handler = void 0;
+exports.setup = exports.setFCFSAddresses = exports.setFCAddresses = exports.setFCFSSM = exports.setFCSM = void 0;
 const client_1 = require("@prisma/client");
 const ethers_1 = require("ethers");
-const aws_sdk_1 = __importDefault(require("aws-sdk"));
 const BobbyOrrDrop_json_1 = __importDefault(require("./contracts/BobbyOrrDrop/BobbyOrrDrop.json"));
-aws_sdk_1.default.config.update({
-    region: "us-east-1",
-    accessKeyId: process.env.AWS_ACCESSKEYID || "AWSAccessKeyID",
-    secretAccessKey: process.env.AWS_SECRETACCESSKEY || "AWSSecretAccessKey",
-});
+// AWS.config.update({
+//   region: "us-east-1",
+//   accessKeyId: process.env.AWS_ACCESSKEYID || "AWSAccessKeyID",
+//   secretAccessKey: process.env.AWS_SECRETACCESSKEY || "AWSSecretAccessKey",
+// });
 const infuraUrl = process.env.INFURA_URL || "http://localhost:8545/";
+console.log(infuraUrl);
 const privateKey = process.env.PRIVATE_KEY || "MyPrivateKey";
 const prisma = new client_1.PrismaClient();
-const ses = new aws_sdk_1.default.SES();
+// const ses = new AWS.SES();
 // const ses = new AWS.SESV2();
 const provider = new ethers_1.ethers.JsonRpcProvider(infuraUrl);
 const signer = new ethers_1.ethers.Wallet(privateKey, provider);
-const handler = () => __awaiter(void 0, void 0, void 0, function* () {
+const setFCSM = () => __awaiter(void 0, void 0, void 0, function* () {
+    let whiteListUsers = yield prisma.user.findMany({
+        where: {
+            isFanClub: true,
+        },
+    });
+    const whiteListUserLength = whiteListUsers.length;
+    const myContract = new ethers_1.ethers.Contract(process.env.CONTRACT_ADDRESS || "Contract_Address", BobbyOrrDrop_json_1.default.abi, signer);
+    for (let i = 0; i * 100 < whiteListUserLength; i += 100) {
+        let array = [];
+        for (let j = i * 100; j < Math.min(whiteListUserLength, (i + 1) * 100); j++) {
+            array.push(whiteListUsers[j].id);
+        }
+        yield myContract.setFanClubSmartmintUsers(array);
+    }
+});
+exports.setFCSM = setFCSM;
+const setFCFSSM = () => __awaiter(void 0, void 0, void 0, function* () {
     let whiteListUsers = yield prisma.user.findMany({
         where: {
             isBobby: true,
         },
     });
     const whiteListUserLength = whiteListUsers.length;
-    const minLength = Math.min(2, whiteListUserLength);
-    console.log("minLength", minLength);
-    let fanClubUsers = [];
-    for (let i = 0; i < minLength; i++) {
-        const randomUserIndex = Math.floor(Math.random() * 10000) % (whiteListUserLength - i);
-        fanClubUsers.push(whiteListUsers[randomUserIndex]);
-        let left = whiteListUsers.slice(0, randomUserIndex), right = whiteListUsers.slice(randomUserIndex + 1, whiteListUsers.length);
-        whiteListUsers = [...left, ...right];
-    }
-    console.log("length:", fanClubUsers.length);
-    for (let i = 0; i < fanClubUsers.length; i++) {
-        try {
-            yield prisma.user.update({
-                where: {
-                    id: fanClubUsers[i].id,
-                },
-                data: {
-                    isFanClub: true,
-                },
-            });
-            const params = {
-                Source: "hello@bobbyorr.io",
-                Destination: {
-                    ToAddresses: [fanClubUsers[i].email],
-                },
-                Message: {
-                    Subject: {
-                        Data: `Congratulations! You are now a FanClub User.`,
-                    },
-                    Body: {
-                        Text: {
-                            Data: `Hi, how are you doing today.`,
-                        },
-                    },
-                },
-            };
-            ses.sendEmail(params, (err, data) => {
-                if (err) {
-                    console.log("message", err.message);
-                }
-                if (data) {
-                    console.log("Email ID:", i, data.MessageId);
-                }
-            });
-        }
-        catch (error) {
-            console.log("message", error);
-        }
-    }
     const myContract = new ethers_1.ethers.Contract(process.env.CONTRACT_ADDRESS || "Contract_Address", BobbyOrrDrop_json_1.default.abi, signer);
-    myContract.setAllowListFanClubUsers(fanClubUsers.map((item) => item.id));
-    // myContract.setStage(1, ethers.parseEther("0.004"));
+    for (let i = 0; i * 100 < whiteListUserLength; i += 100) {
+        let array = [];
+        for (let j = i * 100; j < Math.min(whiteListUserLength, (i + 1) * 100); j++) {
+            array.push(whiteListUsers[j].id);
+        }
+        yield myContract.setWhiteListSmartmintUsers(array);
+    }
 });
-exports.handler = handler;
+exports.setFCFSSM = setFCFSSM;
+const setFCAddresses = () => __awaiter(void 0, void 0, void 0, function* () {
+    let whiteListAddress = yield prisma.bobbyOrrWhiteList.findMany({
+        where: {
+            isFanClub: true,
+        },
+    });
+    const myContract = new ethers_1.ethers.Contract(process.env.CONTRACT_ADDRESS || "Contract_Address", BobbyOrrDrop_json_1.default.abi, signer);
+    yield myContract.setFanClubAddresses(whiteListAddress.map((item) => item.id));
+});
+exports.setFCAddresses = setFCAddresses;
+const setFCFSAddresses = () => __awaiter(void 0, void 0, void 0, function* () {
+    let whiteListUsers = yield prisma.bobbyOrrWhiteList.findMany({});
+    const myContract = new ethers_1.ethers.Contract(process.env.CONTRACT_ADDRESS || "Contract_Address", BobbyOrrDrop_json_1.default.abi, signer);
+    yield myContract.setWhiteListAddresses(whiteListUsers.map((item) => item.id));
+});
+exports.setFCFSAddresses = setFCFSAddresses;
+const setup = () => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield (0, exports.setFCSM)();
+        yield (0, exports.setFCFSSM)();
+        yield (0, exports.setFCAddresses)();
+        yield (0, exports.setFCFSAddresses)();
+    }
+    catch (error) {
+        console.log(error);
+    }
+});
+exports.setup = setup;
+(0, exports.setup)();
 //# sourceMappingURL=index.js.map

@@ -1,1 +1,1 @@
-require("./index").handler();
+require("./index").setup();
