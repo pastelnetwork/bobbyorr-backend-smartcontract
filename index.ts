@@ -35,16 +35,19 @@ export const setFCSM = async () => {
   const myContract = new ethers.Contract(process.env.CONTRACT_ADDRESS || "Contract_Address", BobbyOrrDrop.abi, signer);
   console.log("setFCSM", whiteListUserLength);
 
-  for (let i = 0; i * 100 < whiteListUserLength; i += 100) {
-    let array = [];
-    for (let j = i * 100; j < Math.min(whiteListUserLength, (i + 1) * 100); j++) {
-      array.push(whiteListUsers[j].id);
-    }
+  // for (let i = 0; i * 100 < whiteListUserLength; i += 100) {
+  //   let array = [];
+  //   for (let j = i * 100; j < Math.min(whiteListUserLength, (i + 1) * 100); j++) {
+  //     array.push(whiteListUsers[j].id);
+  //   }
 
-    await myContract.setFanClubSmartmintUsers(array, {
+  await myContract.setFanClubSmartmintUsers(
+    whiteListUsers.map((user: any) => user.id),
+    {
       gasLimit: 10000000,
-    });
-  }
+    }
+  );
+  // }
 };
 
 export const setFCFSSM = async () => {
@@ -59,16 +62,19 @@ export const setFCFSSM = async () => {
   const myContract = new ethers.Contract(process.env.CONTRACT_ADDRESS || "Contract_Address", BobbyOrrDrop.abi, signer);
   console.log("setFCFSSM", whiteListUserLength);
 
-  for (let i = 0; i * 100 < whiteListUserLength; i += 100) {
-    let array = [];
-    for (let j = i * 100; j < Math.min(whiteListUserLength, (i + 1) * 100); j++) {
-      array.push(whiteListUsers[j].id);
-    }
+  // for (let i = 0; i * 100 < whiteListUserLength; i += 100) {
+  //   let array = [];
+  //   for (let j = i * 100; j < Math.min(whiteListUserLength, (i + 1) * 100); j++) {
+  //     array.push(whiteListUsers[j].id);
+  //   }
 
-    await myContract.setWhiteListSmartmintUsers(array, {
+  await myContract.setWhiteListSmartmintUsers(
+    whiteListUsers.map((user: any) => user.id),
+    {
       gasLimit: 10000000,
-    });
-  }
+    }
+  );
+  // }
 };
 
 export const setFCAddresses = async () => {
@@ -81,17 +87,20 @@ export const setFCAddresses = async () => {
 
   const myContract = new ethers.Contract(process.env.CONTRACT_ADDRESS || "Contract_Address", BobbyOrrDrop.abi, signer);
 
-  for (let i = 0; i * 100 < whiteListUserLength; i += 100) {
-    let array = [];
-    for (let j = i * 100; j < Math.min(whiteListUserLength, (i + 1) * 100); j++) {
-      array.push(whiteListAddress[j].address);
-    }
-    console.log("setFCAddresses", array);
+  // for (let i = 0; i * 100 < whiteListUserLength; i += 100) {
+  //   let array = [];
+  //   for (let j = i * 100; j < Math.min(whiteListUserLength, (i + 1) * 100); j++) {
+  //     array.push(whiteListAddress[j].address);
+  //   }
+  //   console.log("setFCAddresses", array);
 
-    await myContract.setFanClubAddresses(array, {
+  await myContract.setFanClubAddresses(
+    whiteListAddress.map((user: any) => user.address),
+    {
       gasLimit: 20000000,
-    });
-  }
+    }
+  );
+  // }
 
   // await myContract.setFanClubAddresses(whiteListAddress.map((item) => item.id));
 };
@@ -103,17 +112,20 @@ export const setFCFSAddresses = async () => {
 
   let whiteListUserLength = whiteListUsers.length;
 
-  for (let i = 0; i * 100 < whiteListUserLength; i += 100) {
-    let array = [];
-    for (let j = i * 100; j < Math.min(whiteListUserLength, (i + 1) * 100); j++) {
-      array.push(whiteListUsers[j].address);
-    }
-    console.log("setFCFSAddresses", array);
+  // for (let i = 0; i * 100 < whiteListUserLength; i += 100) {
+  //   let array = [];
+  //   for (let j = i * 100; j < Math.min(whiteListUserLength, (i + 1) * 100); j++) {
+  //     array.push(whiteListUsers[j].address);
+  //   }
+  //   console.log("setFCFSAddresses", array);
 
-    await myContract.setWhiteListAddresses(array, {
+  await myContract.setWhiteListAddresses(
+    whiteListUsers.map((user) => user.address),
+    {
       gasLimit: 20000000,
-    });
-  }
+    }
+  );
+  // }
   // await myContract.setWhiteListAddresses(whiteListUsers.map((item) => item.id));
 };
 
