@@ -1,0 +1,3 @@
+import { sendToFanClubUsers } from ".";
+
+sendToFanClubUsers();

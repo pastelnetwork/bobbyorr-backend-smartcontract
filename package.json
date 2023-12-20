@@ -6,6 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "setup": "ts-node ./index.ts",
+    "send:fc": "ts-node ./sendEmailsToFanClubUsers.ts",
+    "send:wl": "ts-node ./sendEmailsToWhiteListUsers.ts",
     "setup:fcsm": "ts-node ./setFanClubSmartmintUser.ts",
     "setup:wlsm": "ts-node ./setWhiteListSmartmintUser.ts",
     "setup:fcad": "ts-node ./setFanClubAddresses.ts",

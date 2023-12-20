@@ -1,0 +1,3 @@
+import { sendToWhiteListUsers } from ".";
+
+sendToWhiteListUsers();
