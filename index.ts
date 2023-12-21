@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, User } from "@prisma/client";
 import { ethers } from "ethers";
 import AWS from "aws-sdk";
 
@@ -67,25 +67,16 @@ export const sendToFanClubUsers = async () => {
   });
 };
 
-export const sendToWhiteListUsers = async () => {
+const sendEmailsToUsers = async (users: User[]) => {
   AWS.config.update({
     region: "us-east-1",
     accessKeyId: process.env.AWS_ACCESSKEYID || "AWSAccessKeyID",
     secretAccessKey: process.env.AWS_SECRETACCESSKEY || "AWSSecretAccessKey",
   });
   const ses = new AWS.SES();
-
-  const whiteListUsers = await prisma.user.findMany({
-    where: {
-      isBobby: true,
-    },
-  });
-
-  console.log("Number of whiteListUsers", whiteListUsers.length);
-
   let params = {
     Destination: {
-      ToAddresses: whiteListUsers.map((user) => user.email),
+      ToAddresses: users.map((user) => user.email),
       // ToAddresses: ["anthony@pastel.network"],
     },
     Message: {
@@ -106,13 +97,32 @@ export const sendToWhiteListUsers = async () => {
     Source: "BobbyOrr@BobbyOrr.io",
   };
 
-  ses.sendEmail(params, function (err, data) {
-    if (err) {
-      console.log(err, err.stack);
-    } else {
-      console.log(data);
-    }
+  await ses.sendEmail(params);
+};
+
+export const sendToWhiteListUsers = async () => {
+  const whiteListUsers = await prisma.user.findMany({
+    where: {
+      isBobby: true,
+    },
   });
+
+  console.log("Number of whiteListUsers", whiteListUsers.length);
+
+  let users: User[][] = [];
+
+  for (let i = 0; i < whiteListUsers.length; i += 400) {
+    const temp: User[] = [];
+    for (let j = i; j < i + 400; j++) {
+      if (j >= whiteListUsers.length) {
+        break;
+      }
+      temp.push(whiteListUsers[j]);
+    }
+    users.push(temp);
+  }
+
+  await Promise.allSettled(users.map((user) => sendEmailsToUsers(user)));
 };
 
 export const setFCSM = async () => {
