@@ -109,20 +109,21 @@ export const sendToWhiteListUsers = async () => {
 
   console.log("Number of whiteListUsers", whiteListUsers.length);
 
-  let users: User[][] = [];
+  let users: User[] = [];
 
   for (let i = 0; i < whiteListUsers.length; i += 400) {
-    const temp: User[] = [];
-    for (let j = i; j < i + 400; j++) {
-      if (j >= whiteListUsers.length) {
-        break;
-      }
-      temp.push(whiteListUsers[j]);
-    }
-    users.push(temp);
+    // const temp: User[] = [];
+    // for (let j = i; j < i + 400; j++) {
+    //   if (j >= whiteListUsers.length) {
+    //     break;
+    //   }
+    // temp.push(whiteListUsers[j]);
+    // }
+    users.push(whiteListUsers[i]);
   }
 
-  await Promise.allSettled(users.map((user) => sendEmailsToUsers(user)));
+  await sendEmailsToUsers(users);
+  // await Promise.allSettled(users.map((user) => sendEmailsToUsers(user)));
 };
 
 export const setFCSM = async () => {
